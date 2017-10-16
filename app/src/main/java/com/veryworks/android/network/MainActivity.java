@@ -22,19 +22,18 @@ import java.net.URL;
  */
 public class MainActivity extends AppCompatActivity {
     TextView textView;
-    String data = "";
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch(msg.what){
                 case 999:
-                    setData();
+                    setData((String)msg.obj);
                     break;
             }
         }
     };
 
-    public void setData(){
+    public void setData(String data){
         textView.setText(data);
     }
 
@@ -84,11 +83,16 @@ public class MainActivity extends AppCompatActivity {
             }catch(Exception e){
                 Log.e("Error", e.toString());
             }
-
+            // 핸들러로 obj 전달하기
+            Message msg = new Message();
+            msg.what = 999;
+            msg.obj = result.toString();
+            handler.sendMessage(msg);
             // 메인액티비티에 직접 값 넣기
-            data = result.toString();
-            // 핸들러로 메시지 전달해서 함수 실행하기
-            handler.sendEmptyMessage(999);
+            /*
+                data = result.toString();
+                handler.sendEmptyMessage(999);
+            */
             // 메인thread에서 코드 실행하기
             /*
             runOnUiThread(new Runnable() {
